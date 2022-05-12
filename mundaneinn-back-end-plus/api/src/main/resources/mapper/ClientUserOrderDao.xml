@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserOrderDao">
+    <!--用户订单-列表-->
+    <select id="clientUserOrderList" resultType="com.api.sys.responseEntity.ResponseOrderListEntity">
+        select
+        t1.id,
+        t1.house_id,
+        DATE_FORMAT(t1.start_date,'%Y-%m-%d') as start_date,
+        DATE_FORMAT(t1.end_date,'%Y-%m-%d') as end_date,
+        t2.name,
+        t2.location,
+        t3.name as landlordName,
+        t3.phone as landlordPhone,
+        t1.state,
+        t1.amount_actual,
+        t1.create_time
+        from (select * from client_user_order where user_id=#{userId} and is_del_user=0) as t1
+        inner join client_house as t2 on t1.house_id=t2.id
+        inner join client_user as t3 on t3.id=t2.user_id
+        <if test="houseName != null and houseName != ''">
+            and t2.`name` like concat("%",#{houseName},"%")
+        </if>
+        <if test="treeCode != null and treeCode != ''">
+            and t2.tree_code = #{treeCode}
+        </if>
+        <if test="state != null and state != ''">
+            and t1.state = #{state}
+        </if>
+        order by  t1.create_time desc limit #{sqlPage},#{limit}
+    </select>
+
+    <!--用户订单-列表-总数-->
+    <select id="clientUserOrderListTotal" resultType="java.lang.Integer">
+        select count(t1.id) from (select * from client_user_order where user_id=#{userId} and is_del_user=0) as t1
+        inner join client_house as t2 on t1.house_id=t2.id
+        <if test="houseName != null and houseName != ''">
+            and t2.`name` like concat("%",#{houseName},"%")
+        </if>
+        <if test="treeCode != null and treeCode != ''">
+            and t2.tree_code = #{treeCode}
+        </if>
+        <if test="state != null and state != ''">
+            and t1.state = #{state}
+        </if>
+    </select>
+
+    <!--房东订单-列表-->
+    <select id="landlordOrderList" resultType="com.api.sys.responseEntity.ResponseOrderListEntity">
+        select
+        t2.id,
+        t2.house_id,
+        DATE_FORMAT(t2.start_date,'%Y-%m-%d') as start_date,
+        DATE_FORMAT(t2.end_date,'%Y-%m-%d') as end_date,
+        t1.name,
+        t1.location,
+        t3.name as userName,
+        t3.phone as userPhone,
+        t2.state,
+        t2.amount_actual,
+        t2.create_time
+        from (select * from client_house where user_id=#{userId}) as t1
+        inner join client_user_order as t2 on t2.house_id=t1.id
+        inner join client_user as t3 on t3.id=t2.user_id
+        where t2.is_del_landlord=0
+        <if test="houseName != null and houseName != ''">
+            and t1.`name` like like concat("%",#{houseName},"%")
+        </if>
+        <if test="treeCode != null and treeCode != ''">
+            and t1.tree_code = #{treeCode}
+        </if>
+        <if test="state != null and state != ''">
+            and t2.state = #{state}
+        </if>
+        order by  t2.create_time desc limit #{sqlPage},#{limit}
+    </select>
+
+    <!--房东订单-列表-总数-->
+    <select id="landlordOrderListTotal" resultType="java.lang.Integer">
+        select count(t1.id)
+        from (select * from client_house where user_id=#{userId}) as t1
+        inner join client_user_order as t2 on t2.house_id=t1.id
+        inner join client_user as t3 on t3.id=t2.user_id
+        where t2.is_del_landlord=0
+        <if test="houseName != null and houseName != ''">
+            and t1.`name` like concat("%",#{houseName},"%")
+        </if>
+        <if test="treeCode != null and treeCode != ''">
+            and t1.tree_code = #{treeCode}
+        </if>
+        <if test="state != null and state != ''">
+            and t2.state = #{state}
+        </if>
+    </select>
+
+    <!--取消超时未支付的订单-->
+    <update id="cancelTimeOutOrder">
+        update client_user_order set `state`=3  where id in (select * from (select id from client_user_order where TIMESTAMPDIFF(MINUTE,create_time,now())>#{minutes} and `state`=0) as t1)
+    </update>
+
+    <!--通过订单号查询订单信息-->
+    <select id="getUserOrderByOrderNumber" resultType="com.api.sys.entity.ClientUserOrderEntity">
+        select * from client_user_order where order_number=#{orderNumber}
+    </select>
+
+    <!--查询房源正在进行中的订单-->
+    <select id="getExistedOrder" resultType="com.api.sys.responseEntity.ResponseUserOrderListEntity">
+        select
+            house_id,
+            `name`,
+            start_date,
+            end_date,
+            `state`
+        from
+            client_user_order
+        where
+            house_id=#{houseId} and `state`!=2 and `state`!=3 and `state`!=4
+    </select>
+
+    <!--查询所订日期范围内是否存在进行中订单-->
+    <select id="chooseDateRangeIsExistOrder" resultType="java.lang.Integer">
+        select count(*) from client_user_order where house_id=#{houseId} and `state`!=3 and `state`!=4 and start_date <![CDATA[ >= ]]> #{startDate} and end_date<![CDATA[ <= ]]> #{endDate}
+    </select>
+
+    <!--查询已完成的订单id-->
+    <select id="completeOrderId" resultType="com.api.sys.entity.ClientUserOrderEntity">
+        select id,amount_actual from client_user_order where TIMESTAMPDIFF(Day,end_date,now())>=1 and state=1
+    </select>
+
+    <!--查询已取消的订单-->
+    <select id="cancelOrderId" resultType="com.api.sys.entity.ClientUserOrderEntity">
+        select id,order_number,amount_actual from client_user_order where `state`=3 and payment_status!='0'
+    </select>
+
+    <!--根据订单id查询房东id-->
+    <select id="getUserIdByOrderId" resultType="java.lang.Long">
+        select user_id from client_house where id = (select house_id from client_user_order where id=#{orderId})
+    </select>
+
+    <!--查询本月房东不同账单的金额合计-->
+    <select id="getMoneyByOrderState" resultType="java.lang.String">
+        select sum(amount_actual) from client_user_order where house_id in(select id from client_house where user_id=#{userId}) and `state`=#{state} and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')
+    </select>
+</mapper>

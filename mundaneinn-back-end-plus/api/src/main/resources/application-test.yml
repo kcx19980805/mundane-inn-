@@ -1,0 +1,72 @@
+server:
+  port: 8888
+
+#文件映射路径
+file:
+  uploadPath: /www/wwwroot/kcxFiles/upload/api/      #文件上传路径
+  uploadMaxSize: 204800                #单文件上传大小 200M
+  downloadPath: /www/wwwroot/kcxFiles/download/  #文件下载路径  比如模板文件
+
+spring:
+  application:
+    name: api
+  #sql配置,访问监控页面http://localhost:8080/druid/login.html
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/mundaneinn-plus?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+      username: kcx
+      password: 19980805kcx
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 50000
+      min-evictable-idle-time-millis: 300000
+      #Oracle需要打开注释
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: sys
+        #login-password: sys
+      #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+          enabled: true
+        wall:
+          config:
+            multi-statement-allow: true
+  # redis 配置
+  redis:
+    # 地址
+    host: 127.0.0.1
+    # 端口，默认为6379
+    port: 6379
+  mail:
+    host: smtp.qq.com #qq邮箱smtp服务
+    username: 1255753142@qq.com #邮箱用户名
+    password: lwdhbcmlnvsziidb #邮箱smtp服务密码
+    default-encoding: UTF-8
+#用户是否唯一登录 true:是，false:否
+uniqueLogin: true
+
+##这里根据自己的情况填写
+##邮箱服务器地址
+##QQ smtp.qq.com
+##sina smtp.sina.cn
+##aliyun smtp.aliyun.com
+#163 smtp.163.com
+mail:
+  fromMail:
+  sender: 1255753142@qq.com #发送邮件地址
+  receiver: 2368326121@qq.com #接收邮件地址

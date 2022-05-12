@@ -1,0 +1,5 @@
+/*jQMeter插件样式*/
+.jqmeter-container{
+    position: absolute;
+    top: -15px;
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>工作台</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link th:href="@{/static/images/logo.png}" rel="shortcut icon">
+    <link th:href="@{/static/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/animate.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/style.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+</head>
+<body class="gray-bg">
+<h1 style="width: 100%; text-align-last: center;text-align: center;margin-top: 120px; font-size: 50px;">
+    红尘客栈后台管理系统
+</h1>
+<div id="qrcode" class="text-center"></div>
+<div th:include="include :: footer"></div>
+</body>
+</html>

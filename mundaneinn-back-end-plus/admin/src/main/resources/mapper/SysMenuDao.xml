@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.admin.sys.dao.SysMenuDao">
+        <!--    查询管理员所有的操作权限(增删改查)-->
+        <select id="getPermsList" resultType="java.lang.String">
+            select
+            sm.perms
+            from
+            sys_menu AS sm
+            <if test="type != 0">
+                inner join (
+                select permission_group_id,menu_id
+                from sys_permission_group_menu
+                ) as t1 on t1.permission_group_id = #{type} and sm.id = t1.menu_id
+            </if>
+            WHERE sm.is_del = 0 and sm.`type` = 2 and sm.perms &lt;&gt; ''
+        </select>
+
+        <!--    查询管理员所有的菜单列表-->
+        <select id="getAdminMenuList"
+                resultType="com.admin.sys.responseEntity.ResponseMenuListEntity">
+            select
+            sm.id,
+            sm.parent_id as parentId,
+            sm.`name`,
+            sm.`url`,
+            sm.type,
+            sm.icon,
+            sm.order_num as orderNum
+            from
+            sys_menu AS sm
+            <if test="type != 0">
+                inner join (
+                select permission_group_id,menu_id
+                from sys_permission_group_menu
+                ) as t1 on t1.permission_group_id = #{type} and sm.id = t1.menu_id
+            </if>
+            WHERE sm.is_del = 0 and sm.`type` &lt;&gt; 2
+            order by sm.order_num asc
+        </select>
+
+        <!--查询所有菜单-按钮-->
+        <select id="getTreeMenuList"
+                resultType="com.admin.sys.responseEntity.ResponseMenuListEntity2">
+            select
+                sm.id,
+                sm.parent_id as parentId,
+                sm.`name`
+            from
+                sys_menu AS sm
+            WHERE sm.is_del = 0
+        </select>
+    </mapper>

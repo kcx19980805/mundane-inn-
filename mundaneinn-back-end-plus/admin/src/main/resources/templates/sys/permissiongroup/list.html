@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('管理组列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-12 search-collapse">
+            <form id="permissionGroupTableFrom" onsubmit="return false">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input class="form-control" type="text" id="keyword" name="keyword"
+                                   placeholder="请输入组名"
+                                   data-table="permissionGroupTable"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm tableSearch"
+                               data-table="permissionGroupTable"><i
+                                    class="fa fa-search"></i>&nbsp;查询</a>
+                            <a class="btn btn-warning btn-rounded btn-sm tableRest"
+                               data-table="permissionGroupTable" data-form="permissionGroupTableFrom"><i
+                                    class="fa fa-refresh"></i>&nbsp;清空</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a id="add" class="btn btn-success btn-sm permissionGroupAdd"
+               shiro:hasPermission="sys:permissiongroup:save">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="permissionGroupTable" class="table table-bordered" data-mobile-responsive="true"
+                   data-icon-size="outline"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/static/js/sys/permissiongroup/list.js}"></script>
+</body>
+</html>

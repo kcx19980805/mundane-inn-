@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientHouseCommentDao">
+    <!--房源评论表-列表-->
+    <select id="clientHouseCommentList" resultType="com.api.sys.responseEntity.ResponseHouseCommentListEntity">
+        select
+        t1.user_id,
+        t2.head_img,
+        t2.phone,
+        t1.landlord_id,
+        t1.house_id,
+        t1.content,
+        t1.score,
+        t1.create_time
+        from `client_house_comment` as t1
+        inner join client_user as t2 on t1.user_id=t2.id
+        <where>
+            <if test="landlordId == null or landlordId == ''">
+                t1.house_id=#{houseId}
+            </if>
+            <if test="landlordId != null and landlordId != ''">
+                t1.landlord_id=#{landlordId}
+            </if>
+        </where>
+        order by t1.create_time desc limit #{sqlPage},#{limit}
+    </select>
+    <!--房源评论表-列表-总数-->
+    <select id="clientHouseCommentListTotal" resultType="java.lang.Integer">
+        select
+            count(t1.id)
+        from `client_house_comment` as t1
+        <where>
+            <if test="landlordId == null or landlordId == ''">
+                t1.house_id=#{houseId}
+            </if>
+            <if test="landlordId != null and landlordId != ''">
+                t1.landlord_id=#{landlordId}
+            </if>
+        </where>
+    </select>
+
+    <!--根据订单id查询房东id-->
+    <select id="getUserIdByOrderId" resultType="java.lang.Long">
+        select user_id from client_house where id = (select house_id from client_user_order where id=#{orderId})
+    </select>
+</mapper>

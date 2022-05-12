@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>登录</title>
+    <link th:href="@{/static/favicon.ico}" rel="shortcut icon">
+    <link th:href="@{/static/css/plugins/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/animate.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/style.css}" rel="stylesheet">
+    <link th:href="@{/static/plugins/bootstrap/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/static/css/login.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <style>
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: #166fa0 url("/static/images/login-background.jpg");
+            background-size: 100% 100%;
+        }
+        canvas {
+            z-index: -1;
+            position: absolute;
+        }
+        .we7-form {
+            width: 100%;
+        }
+        .admin_login {
+            height: auto;
+        }
+    </style>
+</head>
+<body class="loginBack">
+    <canvas class="pg-canvas" height="1920" width="969"></canvas>
+    <form id="item" class="we7-form">
+        <dl class="admin_login" style="width: 22%;margin-top: 10%">
+            <dt>
+                <strong>红尘客栈后台管理系统</strong>
+            </dt>
+            <dd class="user_icon" style="height:42px; line-height:42px;">
+                <input type="text" id="account" name="account" class="login_txtbx input" required placeholder="账号"
+                       style="width: 100%;font-size: 16px;height:42px; line-height:42px;"/>
+            </dd>
+            <dd class="pwd_icon" style="height:42px; line-height:42px;">
+                <input type="password" id="password" name="password" class="login_txtbx input" required placeholder="密码"
+                       style="width: 100%;font-size: 16px;height:42px; line-height:42px;"/>
+            </dd>
+            <dd style="margin-top: 20px; height:50px; line-height:50px;">
+                <input type="button" class="submit_btn" value="立即登录"
+                       style="width: 100%; height:50px; line-height:50px;"/>
+            </dd>
+        </dl>
+    </form>
+</body>
+<script th:src="@{/static/plugins/jquery/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/static/plugins/jquery/jquery.base64.js}"></script>
+<script th:src="@{/static/js/plugins/particleground.js}"></script>
+<script th:src="@{/static/plugins/layer/layer.js}"></script>
+<script>
+    if (window.top !== window.self) {
+        window.top.location = window.location;
+    }
+    $(document).ready(function () {
+        //粒子背景特效
+        $('body').particleground({
+            dotColor: '#5c9bbd',
+            lineColor: '#5c9bbd'
+        });
+        var canvas = document.queryselector("canvas");
+        //页面窗口大小改变时触发
+        $(window).resize(function () {
+            //获取浏览器窗口文档显示区域的宽度，不包括滚动条
+            canvas.width = document.documentElement.clientWidth;
+            //获取浏览器窗口文档显示区域的高度度，不包括滚动条
+            canvas.height = document.documentElement.clientHeight;
+            $('#item').width($(window).width());
+        });
+        //禁止浏览器回退到上一个页面
+        if (window.history && window.history.pushState) {
+            $(window).on('popstate', function () {
+                window.history.pushState('forward', null, '#');
+                window.history.forward(1);
+            });
+        }
+        //在IE中必须得有这两行
+        window.history.pushState('forward', null, '#');
+        window.history.forward(1);
+    });
+    //按回车键 触发登录
+    $(".input").keydown(function (e) {
+        if (e.keyCode == 13) {
+            login();
+        }
+    });
+    //登录
+    $(".submit_btn").on("click", function () {
+        login();
+    });
+
+    function login() {
+        var account = $('#account').val();
+        var password = $('#password').val();
+        if (account.length == 0 || password.length == 0 || account.trim().length == 0 || password.trim().length == 0) {
+            return false;
+        }
+        var data = {"account": $.base64.encode(account), "password": $.base64.encode(password)};
+        $.ajax({
+            type: "post",
+            url: "login",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result)
+                if (result.code == 200) {
+                    location.href = './index';
+                } else {
+                    parent.layer.msg(result.msg)
+                }
+            },
+            error: function (result) {
+                console.log(result)
+                parent.layer.msg(result.msg)
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.admin.sys.dao.SysPermissionGroupDao">
+
+    <!--    新增 管理组与菜单关联数据-->
+    <insert id="savePermissionGroupMenu">
+        insert into sys_permission_group_menu
+        (permission_group_id,menu_id)
+        values
+        <foreach collection="menuIdList" item="menuId" separator=",">
+            (#{permissionGroupId},#{menuId})
+        </foreach>
+    </insert>
+
+    <!--    管理组-真删除-->
+    <delete id="deletePermissionGroup">
+        delete spg,t1
+        from sys_permission_group as spg
+        left join sys_permission_group_menu as t1 on t1.permission_group_id = spg.id
+        where spg.id in (#{permissionGroupId})
+    </delete>
+
+    <!--管理组列表-->
+    <select id="permissionGroupList"
+            resultType="com.admin.sys.responseEntity.ResponsePermissionGroupListEntity">
+        select
+        id as permissionGroupId,
+        `name`
+        from `sys_permission_group`
+        where is_del = 0
+        <if test="keyword != null and keyword != ''">
+            and `name` like concat ('%',#{keyword},'%')
+        </if>
+        <if test="limit != null and limit != '' and limit != -1">
+            limit #{sqlPage},#{limit}
+        </if>
+    </select>
+
+    <!-- 管理组列表 总数-->
+    <select id="permissionGroupListTotal" resultType="java.lang.Integer">
+        select
+        count(1)
+        from `sys_permission_group`
+        where is_del = 0
+        <if test="keyword != null and keyword != ''">
+            and `name` like concat ('%',#{keyword},'%')
+        </if>
+    </select>
+
+    <!-- 校验 管理组 组名是否重复-->
+    <select id="checkPermissionGroupNameUnique" resultType="java.lang.Integer">
+        select
+        count(1)
+        from `sys_permission_group`
+        where is_del = 0 and `name` = #{name}
+        <if test="permissionGroupId != null and permissionGroupId != ''">
+            and id &lt;&gt; #{permissionGroupId}
+        </if>
+    </select>
+
+    <!--管理组信息-查询-->
+    <select id="permissionGroupInfo" resultMap="groupInfoMap">
+        select
+            spg.id as permissionGroupId,
+            spg.`name`,
+            t1.menu_id as menuIds
+        from `sys_permission_group` as spg
+                 inner join(
+            select menu_id,permission_group_id
+            from sys_permission_group_menu
+            where permission_group_id = #{permissionGroupId}
+        )as t1 on t1.permission_group_id = spg.id
+        where  spg.is_del = 0 and spg.id = #{permissionGroupId}
+    </select>
+
+    <resultMap id="groupInfoMap" type="com.admin.sys.responseEntity.ResponsePermissionGroupInfoEntity">
+        <id property="permissionGroupId" column="permissionGroupId"/>
+        <result property="name" column="name"/>
+        <collection property="menuIds" javaType="java.util.List" resultMap="menuIdsList"/>
+    </resultMap>
+    <resultMap id="menuIdsList" type="java.lang.String">
+        <result column="menuIds"/>
+    </resultMap>
+</mapper>

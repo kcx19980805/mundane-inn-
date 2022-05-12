@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientAreaTypeDao">
+    <!--地区分类表-列表-->
+    <select id="clientAreaTypeList" resultType="com.api.sys.entity.ClientAreaTypeEntity">
+        select * from `client_area_type` where is_del=0
+    </select>
+</mapper>

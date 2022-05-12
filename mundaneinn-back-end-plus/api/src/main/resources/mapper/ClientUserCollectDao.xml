@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserCollectDao">
+    <!--用户收藏列表-->
+    <select id="clientUserCollectList" resultMap="clientUserCollectListMap">
+        select t1.*,t2.head_img,t3.img_url from
+        (select id,user_id,`name`,location,tree_code,house_price,discount,residence_type,rental_type,people_number,
+        bed_number,house_type,is_near_subway,score,comments_number,"" as distance
+        from client_house
+        where
+        is_del=0 and `state`=1 and id in (select house_id from client_user_collect where user_id=#{userId}))as t1
+        inner join client_user as t2 on t2.id=t1.user_id
+        inner join client_house_picture as t3 on t1.id=t3.house_id
+        order by id
+    </select>
+    <resultMap id="clientUserCollectListMap" type="com.api.sys.responseEntity.ResponseHouseListEntity">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="house_price" property="housePrice"></result>
+        <result column="discount" property="discount"></result>
+        <result column="rental_type" property="rentalType"></result>
+        <result column="people_number" property="peopleNumber"></result>
+        <result column="bed_number" property="bedNumber"></result>
+        <result column="house_type" property="houseType"></result>
+        <result column="is_near_subway" property="isNearSubway"></result>
+        <result column="score" property="score"></result>
+        <result column="comments_number" property="commentsNumber"></result>
+        <result column="head_img" property="headImg"></result>
+        <result column="distance" property="distance"></result>
+        <collection property="images"  ofType="string" javaType="arrayList">
+            <result column="img_url"></result>
+        </collection>
+    </resultMap>
+
+    <!--查询其他用户的收藏房源-->
+    <select id="getOtherUserCollectList" resultMap="getOtherUserCollectListResultMap">
+        select * from client_user_collect where user_id != #{userId} order by user_id
+    </select>
+    <resultMap id="getOtherUserCollectListResultMap" type="com.api.sys.responseEntity.ResponseCollectOtherListEntity">
+        <result column="user_id" property="userId"></result>
+        <collection property="houseIds"  ofType="long" javaType="arrayList">
+            <result column="house_id"></result>
+        </collection>
+    </resultMap>
+</mapper>

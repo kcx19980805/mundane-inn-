@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('账号管理-列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-12 search-collapse">
+            <form id="userTableForm" onsubmit="return false">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input class="form-control" type="text" id="keyword" name="keyword"
+                                   placeholder="请输入账号"
+                                   data-table="userTable"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm tableSearch"
+                               data-table="userTable"><i
+                                    class="fa fa-search"></i>&nbsp;查询</a>
+                            <a class="btn btn-warning btn-rounded btn-sm tableRest"
+                               data-table="userTable" data-form="userTableForm"><i
+                                    class="fa fa-refresh"></i>&nbsp;清空</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a id="add" class="btn btn-primary btn-sm userAdd"
+               shiro:hasPermission="sys:user:save">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="userTable" class="table table-bordered" data-mobile-responsive="true"
+                   data-icon-size="outline"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/static/js/sys/user/list.js}"></script>
+</body>
+</html>

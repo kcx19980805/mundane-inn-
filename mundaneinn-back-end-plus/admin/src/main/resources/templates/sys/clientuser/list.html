@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户管理-列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-12 search-collapse">
+            <form id="clientUserTableForm" onsubmit="return false">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input class="form-control" type="text" id="account" name="account"
+                                   placeholder="登录账号"
+                                   data-table="clientUserTable"/>
+                        </li>
+                        <li>
+                            <input class="form-control" type="text" id="phone" name="phone"
+                                   placeholder="手机号"
+                                   data-table="clientUserTable"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm tableSearch"
+                               data-table="clientUserTable"><i
+                                    class="fa fa-search"></i>&nbsp;查询</a>
+                            <a class="btn btn-warning btn-rounded btn-sm tableRest"
+                               data-table="clientUserTable" data-form="clientUserTableForm"><i
+                                    class="fa fa-refresh"></i>&nbsp;清空</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a id="add" class="btn btn-primary btn-sm userAdd"
+               shiro:hasPermission="sys:clientuser:save">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+            <div class="btn-group">
+            <a id="import" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" shiro:hasPermission="sys:clientuser:save">
+            导入 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="userImportTemplate">下载导入模板</a>
+                <li><a class="userImport">导入用户</a>
+            </ul>
+            <form enctype="multipart/form-data">
+                <input type="file" name="file"
+                       accept="applicationnd.ms-excel,applicationnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                       class="form-control" id="userImport"
+                       data-table="clientCompanyInformationTable" style="display: none"/>
+            </form>
+        </div>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="clientUserTable" class="table table-bordered" data-mobile-responsive="true"
+                   data-icon-size="outline"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/static/js/sys/clientuser/list.js}"></script>
+</body>
+</html>
