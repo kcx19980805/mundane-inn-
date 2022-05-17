@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入样式 -->
+    <th:block th:include="include :: header('用户管理-列表')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div" id="app">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-12 search-collapse">
+            <form id="clientHouseTableForm" onsubmit="return false">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input class="form-control" type="text" id="houseName" name="houseName"
+                                   placeholder="房源名称"
+                                   data-table="clientHouseTable"/>
+                        </li>
+                        <li style="display: flex">
+                            <label class="control-label" style="display: inline-block;height: 30px;line-height: 30px">房源状态:</label>
+                            <select id="state" type="select" class="form-control" data-table="clientHouseTable">
+                                <option value=''>请选择</option>
+                                <option value='0'>待审核</option>
+                                <option value='1'>已上架</option>
+                                <option value='2'>审核失败</option>
+                            </select>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm tableSearch"
+                               data-table="clientHouseTable"><i
+                                    class="fa fa-search"></i>&nbsp;查询</a>
+                            <a class="btn btn-warning btn-rounded btn-sm tableRest"
+                               data-table="clientHouseTable" data-form="clientHouseTableForm"><i
+                                    class="fa fa-refresh"></i>&nbsp;清空</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="clientHouseTable" class="table table-bordered" data-mobile-responsive="true"
+                   data-icon-size="outline"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/static/js/sys/clienthouse/list.js}"></script>
+</body>
+</html>

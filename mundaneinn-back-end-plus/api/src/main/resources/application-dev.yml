@@ -1,0 +1,83 @@
+server:
+  port: 8888
+
+#文件映射路径
+file:
+  uploadPath: D:/mundaneinn-back-end-plus/upload/api/         #文件上传路径
+  uploadMaxSize: 204800                #单文件上传大小 200M
+  downloadPath: D:/mundaneinn-back-end-plus/download/  #文件下载路径  比如模板文件
+
+spring:
+  application:
+    name: api
+  #sql配置,访问监控页面http://localhost:8080/druid/login.html
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/mundaneinn-plus?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: 19980805kcx
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 50000
+      min-evictable-idle-time-millis: 300000
+      #Oracle需要打开注释
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: sys
+        #login-password: sys
+      #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+          enabled: true
+        wall:
+          config:
+            multi-statement-allow: true
+  # redis 配置
+  redis:
+    # 地址
+    host: 127.0.0.1
+    # 端口，默认为6379
+    port: 6379
+  mail:
+    host: smtp.qq.com #qq邮箱smtp服务
+    username: 1255753142@qq.com #邮箱用户名
+    password: lwdhbcmlnvsziidb #邮箱smtp服务密码
+    default-encoding: UTF-8
+
+# APPID
+alipay:
+  #公司支付宝APPID
+  appId: 2021000116674512
+  # 商户私钥, 即PKCS8格式RSA2私钥
+  privateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQSWXmt97AnM/Pou97KDJ3SuCc18mOHuPRO/49qJS2okfg5+M9ltOtU5ju8RwBO7E3aw2xe3ARYSWsZB6/yKHjtde5pJynU40S9TOQd9q6uzNjJVGCmfBz+0I4YNjcNLnpIMMLC4OlMCTdRyt4f23b/dIhuIXEcb/IrlRVwhwerZlImrQUQMIapDZwKdvZ7XiJC6r2eyQkEWFIVzF46ANoTL34i7TUnHe5zIkh148sccr+/VKlV5nRWPBSR4dZimRItPFySCWaog4rMlviKMtbl6jSdJj67oLj7J5ilV1nDisOCP3NyxuPK5XGtFdl8neNNKPp3zDWZ4ZiVoK/CxxnAgMBAAECggEAIJaTT2LkCrjgLtNsJ3LSwyLETGhoe5L6fX2BVMfInt9UQLXfGz//mzwwZHdMjfK/efbR5u4sR6Cbc65BS6uy9M1TZfiJ8TjrugZrmQuY+WfimVgKaub96hQrxrQJBuNZwg/GPa5iE2MmUFwMs3CEjZVsanVUsSPH3zmQjrYCx+KykLovhlAgBGJNTK+GfAumQRTVhiK2loUc78U/sLn7SdCIKPXb5m8gS90hVggdbZHq6o/vaTV1PQQu04cAgBw6Lm+ztlZclQ4KNOZXYxzCbo3TY2i0sZGfOGnxphuWgkDIvoqzDd3SoH7bshQKdMGrUUYhk2jEBjmT0q7tpyQFcQKBgQDP3wTZNLnHGKKAsDCL11BjamzNFaJLvMbjOziyxvOB1dDSbApz9SAmLokdd81MVi9QgF9lWR8vE9b/sPkMlNwABdnr77FmG5Hx9oghJ0L7klhyoSNJuUjKIzazYw6741QspcVNmwvET3gC5RdL4ZqbGWjF3W3WSfjn/868LUiNnQKBgQCxsZauRzMGaejGro+V46c/Kxa110vPSPX2yhSlZtTbKeMjCjRPf9yAHpd854zqo1rJa6WbOwx64rOl/XUDIxlfi6J/wA3KZvpDGmbX4aujqUgIel6xsdEnKcZP//RFMmIePd3lqhohfZd7wlBrSFyz09PXy7gZklG8O0IAgZy00wKBgQCeV+IXmsRRVwCiSpQQUgmYUT9j0bD5RGm0Oi5scISZSEhzoX0s63J740LrQZEPLy+HgOIqD4NjlxdVWne8D8Ct+8cOpF1bzHCWAhecOY4amFXrq7d3tz4tTDmk2DYnBXnfML9k6FBET8y5V80xLj9ZGjfnUU8TxvFluETArzXvOQKBgCWobjeXDUBBt7xLiFCKw4oGlrSI4R8X5lCb+Q4oodmkoeduJTHn9hIM6avl4p5jaj0fnCQuunFclBgMg/zbNmhiTljmmcWYV1dbRApiYB66JHLvhBwChEHZf5a6tsjnaZXhJKKkjw8j77OhtatW1ZaiwNWN7gE1Wi8bG9zBmzVTAoGBAMn3X0OW+Skybe8YCleGKB2MJG18v0UlvlJ9HluMbj/rvYx14XGo+w5t6HvBgycOjEVOcM8KlRDc07IRVdyh5EYXTe4cV7gb0vlHPYtnC6DR6ytDUt55pEFncbsy7FFYA1HNwiMwujM/V24iq0yhEv9IzNOWkEVCU2TbEfg8Ey6F
+  # 支付宝公钥, 即对应APPID下的支付宝公钥
+  publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6npSNIrJnFU1U2pQ9ybEvLFIT3X2VedtfgZqNVWnBWSnZqUF49mSL/tUFrbLvWKOktJPg25Itk1wIjoW77qZYVzRSlRFdyJg8BBCXu673GIKjeLzlazqxq3jQCrH55wrRwCmAsF6juuTbroSzotwAlylmeOO291O8Blo/DDYWTK4o7q6zekDWUMfA8y65xVNjO0BS40A5uaCBWHoAH48ZoEh9u/vFr1ebNEiNjs4MHP53lWxLR7cCFYCPAwH/09l3gG9kPPioV9jzfs0GGRhZ66KoPnnmgs8tI6ptG8ON04JGm4zaq/uqdRTnUi2L9Glv+xk50Ko2kJah2uNUXBM7QIDAQAB
+  # 服务器异步通知页面路径, 需http://格式的完整路径
+  # 踩坑:不能加?type=abc这类自定义参数
+  notifyUrl: http://3dhzzx.natappfree.cc/api/alipayCallBack
+  # 页面跳转同步通知页面路径, 需http://格式的完整路径
+  # 踩坑:不能加?type=abc这类自定义参数
+  returnUrl: http://localhost:9001/CustomerInfo
+  # 签名方式
+  signType: RSA2
+  # 字符编码格式
+  charset: utf-8
+  # 支付宝网关
+  gatewayUrl: https://openapi.alipaydev.com/gateway.do
+  # 日志打印地址
+  logPath: D:\\
+

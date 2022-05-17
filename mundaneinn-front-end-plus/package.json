@@ -1,0 +1,42 @@
+{
+  "name": "mundaneinn-front-end-plus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build:test": "vue-cli-service build --mode test",
+    "build:prod": "vue-cli-service build"
+  },
+  "dependencies": {
+    "ali-oss": "^6.17.1",
+    "animate.css": "^4.1.1",
+    "axios": "^0.26.1",
+    "core-js": "^3.8.3",
+    "element-ui": "^2.15.8",
+    "emoji-vue": "^0.2.4",
+    "js-base64": "^3.7.2",
+    "js-cookie": "^3.0.1",
+    "node-sass": "^7.0.1",
+    "sass-loader": "^12.6.0",
+    "vue": "^2.6.14",
+    "vue-baidu-map": "^0.21.22",
+    "vue-qr": "^4.0.6",
+    "vue-quill-editor": "^3.0.6",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "less-loader": "^8.0.0",
+    "postcss-import": "^14.1.0",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

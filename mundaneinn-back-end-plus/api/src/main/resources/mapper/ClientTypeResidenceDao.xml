@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientTypeResidenceDao">
+    <!--房源房型类型表-列表-->
+    <select id="clientTypeResidenceList" resultType="com.api.sys.entity.ClientTypeResidenceEntity">
+        select * from `client_type_residence` where is_del=0
+    </select>
+</mapper>

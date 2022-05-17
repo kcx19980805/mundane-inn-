@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('用户管理-编辑')"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-sysUser-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用户id</label>
+            <div class="col-sm-8">
+                <input id="userId" class="form-control required"  type="text" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red;display: inline-block;">*</span>账号</label>
+            <div class="col-sm-8">
+                <input id="account" name="account" class="form-control required" placeholder="请输入账号" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red;display: inline-block;">*</span>昵称</label>
+            <div class="col-sm-8">
+                <input id="nickName" name="nickName" class="form-control required" placeholder="昵称" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">姓名</label>
+            <div class="col-sm-8">
+                <input id="name" name="name" class="form-control"
+                       placeholder="请输入姓名" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red;display: inline-block;">*</span>手机号码</label>
+            <div class="col-sm-8">
+                <input id="phone" name="手机号码" class="form-control phone"
+                       placeholder="请输入手机号码" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">
+                <span style="color: red;display: inline-block;">*</span>性别
+            </label>
+            <div class="col-sm-8">
+                <select id="sex" type="select" class="form-control required">
+                    <option value="0">男</option>
+                    <option value="1">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red;display: inline-block;">*</span>邮箱</label>
+            <div class="col-sm-8">
+                <input id="email" name="邮箱" class="form-control required email"
+                       placeholder="请输入邮箱" type="text"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/static/js/sys/clientuser/edit.js}"></script>
+</body>
+</html>

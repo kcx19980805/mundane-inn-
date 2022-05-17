@@ -1,0 +1,8 @@
+ layer.prompt 自带默认弹窗 添加placeholder属性 方法1 .2 都行
+ 1：layer.js 源码修改：return '<input placeholder="'+e.placeholder+'" type="' + (1 == e.formType ? "password" : "text") + '" class="layui-layer-input" value="' + (e.value || "") + '">'
+ 2：   layer.prompt({
+               title:'活动签单',
+               placeholder:'活动签单内容'
+              // value:'活动签单内容'
+           },function (value,index,elem) {
+           }) && $(".layui-layer-prompt").find("input").attr("placeholder","填写金额");

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserAmountRecordDao">
+    <!--用户余额变更记录表-列表-->
+    <select id="clientUserAmountRecordList" resultType="com.api.sys.responseEntity.ResponseUserAmountRecordListEntity">
+        select t1.id,
+               t2.`name` as houseName,
+               DATE_FORMAT(t2.start_date,'%Y-%m-%d') as start_date,
+               DATE_FORMAT(t2.end_date,'%Y-%m-%d') as end_date,
+               t4.`name` as userName,
+               t4.phone as userPhone,
+               t1.create_time,
+               t1.amount,
+               t1.operator
+        from
+            (select * from`client_user_amount_record` where is_del=0 and user_id=#{userId} and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) as t1
+            inner join client_user_order as t3 on t1.order_id=t3.id
+            inner join client_house as t2 on t3.house_id=t2.id
+            inner join client_user as t4 on t4.id=t3.user_id
+            <where>
+                <if test="houseName != null and houseName != ''">
+                    and t2.`name` like concat("%",#{houseName},"%")
+                </if>
+                <if test="operator != null and operator != ''">
+                    and t1.operator = #{operator}
+                </if>
+            </where>
+            limit #{sqlPage},#{limit}
+    </select>
+    <!--用户余额变更记录表-列表-总数-->
+    <select id="clientUserAmountRecordListTotal" resultType="java.lang.Integer">
+        select count(t1.id)
+        from
+        (select * from`client_user_amount_record` where is_del=0 and user_id=2 and DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) as t1
+        inner join client_user_order as t3 on t1.order_id=t3.id
+        inner join client_house as t2 on t3.house_id=t2.id
+        <where>
+            <if test="houseName != null and houseName != ''">
+                and t2.`name` like concat("%",#{houseName},"%")
+            </if>
+            <if test="operator != null and operator != ''">
+                and t1.operator = #{operator}
+            </if>
+        </where>
+    </select>
+</mapper>

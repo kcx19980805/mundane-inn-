@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientAreaPopularDao">
+    <!--用户常用地区表-列表-->
+    <select id="clientAreaPopularList" resultType="com.api.sys.entity.ClientAreaPopularEntity">
+        select * from `client_area_popular` where area_type_id=#{areaTypeId} and tree_code=#{treeCode} and is_del=0
+    </select>
+</mapper>

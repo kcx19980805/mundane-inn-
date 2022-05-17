@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientHouseDao">
+    <!--房源表-列表-->
+    <select id="clientHouseList" resultMap="clientHouseListResultMap">
+        select t1.*,t2.head_img,t3.img_url from
+        (select id,user_id,`name`,location,tree_code,house_price,discount,residence_type,rental_type,people_number,
+        bed_number,house_type,is_near_subway,score,comments_number
+        <choose>
+            <when test="pointLng !='' and pointLat !=''">
+                ,st_distance_sphere(point,point(#{pointLng},#{pointLat}))/1000 as distance
+            </when>
+            <otherwise>
+                ,"" as distance
+            </otherwise>
+        </choose>
+        from client_house
+        where
+            is_del=0 and `state`=1
+        <if test="cityCode != null and cityCode != ''">
+            and tree_code=#{cityCode}
+        </if>
+        <if test="region != null and region != '' and pointLng == '' and pointLat == ''">
+            and (location like concat("%",#{region},"%") or `name` like concat("%",#{region},"%"))
+        </if>
+        <if test="region != null and region != '' and pointLng != '' and pointLat != ''">
+            and (location like concat("%",#{region},"%") or `name` like concat("%",#{region},"%") or
+                 st_distance_sphere(point,point(#{pointLng},#{pointLat}))/1000 <![CDATA[ < ]]> #{distance})
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and date_format(start_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date_format(end_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{endTime}
+        </if>
+        <if test="peopleNumber != null and peopleNumber != ''">
+            and people_number=#{peopleNumber}
+        </if>
+        <if test="bedNumber != null and bedNumber != ''">
+            and bed_number=#{bedNumber}
+        </if>
+        <if test="houseType != null and houseType != ''">
+            and house_type=#{houseType}
+        </if>
+        <if test="housePrice != null and housePrice != ''">
+            and house_price <![CDATA[ <= ]]> #{housePrice}
+        </if>
+        <if test="rentalType != null and rentalType != ''">
+            and rental_type=#{rentalType}
+        </if>
+        <if test="isRecommend == 1">
+            and id in
+            <foreach collection="recommendHouseIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="matchListTotal != 0">
+            and id in(select house_id from client_house_match where match_id in
+            <foreach collection="matchList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            group by house_id having count(id)=#{matchListTotal})
+        </if>
+        <if test="residenceListTotal != 0">
+            and id in(select house_id from client_house_residence where residence_id in
+            <foreach collection="residenceList" item="item"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            group by house_id having count(id)=#{residenceListTotal})
+        </if>
+        limit #{sqlPage},#{limit})as t1
+        inner join client_user as t2 on t2.id=t1.user_id
+        inner join client_house_picture as t3 on t1.id=t3.house_id
+        order by
+        <if test="orderByPriceAsc == 1">
+            house_price asc,
+        </if>
+        <if test="orderByPriceDesc == 1">
+            house_price desc,
+        </if>
+        <if test="orderByScore == 1">
+            score desc,
+        </if>
+        id
+    </select>
+    <resultMap id="clientHouseListResultMap" type="com.api.sys.responseEntity.ResponseHouseListEntity">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="house_price" property="housePrice"></result>
+        <result column="discount" property="discount"></result>
+        <result column="rental_type" property="rentalType"></result>
+        <result column="people_number" property="peopleNumber"></result>
+        <result column="bed_number" property="bedNumber"></result>
+        <result column="house_type" property="houseType"></result>
+        <result column="is_near_subway" property="isNearSubway"></result>
+        <result column="score" property="score"></result>
+        <result column="comments_number" property="commentsNumber"></result>
+        <result column="head_img" property="headImg"></result>
+        <result column="distance" property="distance"></result>
+        <result column="state" property="state"></result>
+        <result column="start_date" property="startDate"></result>
+        <result column="end_date" property="endDate"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="location" property="location"></result>
+        <collection property="images"  ofType="string" javaType="arrayList">
+                <result column="img_url"></result>
+        </collection>
+    </resultMap>
+
+    <!--房源表-列表-总数-->
+    <select id="clientHouseListTotal" resultType="java.lang.Integer">
+        select count(id)
+        from client_house
+        where
+        is_del=0 and `state`=1
+        <if test="cityCode != null and cityCode != ''">
+            and tree_code=#{cityCode}
+        </if>
+        <if test="region != null and region != '' and pointLng == '' and pointLat == ''">
+            and (location like concat("%",#{region},"%") or `name` like concat("%",#{region},"%"))
+        </if>
+        <if test="region != null and region != '' and pointLng != '' and pointLat != ''">
+            and (location like concat("%",#{region},"%") or `name` like concat("%",#{region},"%") or
+            st_distance_sphere(point,point(#{pointLng},#{pointLat}))/1000 <![CDATA[ < ]]> #{distance})
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and date_format(start_date,'%Y-%m-%d') <![CDATA[ <= ]]> #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date_format(end_date,'%Y-%m-%d') <![CDATA[ >= ]]> #{endTime}
+        </if>
+        <if test="peopleNumber != null and peopleNumber != ''">
+            and people_number=#{peopleNumber}
+        </if>
+        <if test="bedNumber != null and bedNumber != ''">
+            and bed_number=#{bedNumber}
+        </if>
+        <if test="houseType != null and houseType != ''">
+            and house_type=#{houseType}
+        </if>
+        <if test="housePrice != null and housePrice != ''">
+            and house_price <![CDATA[ <= ]]> #{housePrice}
+        </if>
+        <if test="rentalType != null and rentalType != ''">
+            and rental_type=#{rentalType}
+        </if>
+        <if test="isRecommend == 1">
+            and id in
+            <foreach collection="recommendHouseIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="matchListTotal != 0">
+            and id in(select house_id from client_house_match where match_id in
+            <foreach collection="matchList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            group by house_id having count(id)=#{matchListTotal})
+        </if>
+        <if test="residenceListTotal != 0">
+            and id in(select house_id from client_house_residence where residence_id in
+            <foreach collection="residenceList" item="item"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            group by house_id having count(id)=#{residenceListTotal})
+        </if>
+    </select>
+
+    <!--房东房源列表-->
+    <select id="landlordHouseList" resultMap="clientHouseListResultMap">
+        select t1.*,t2.head_img,t3.img_url from
+        (select id,user_id,`name`,location,tree_code,house_price,discount,residence_type,rental_type,people_number,
+        bed_number,house_type,is_near_subway,score,comments_number,`state`,DATE_FORMAT(start_date,'%Y-%m-%d') as start_date,
+        DATE_FORMAT(end_date,'%Y-%m-%d') as end_date,create_time,"" as distance
+        from client_house
+        where
+        is_del=0 and user_id=#{userId}
+        <if test="cityCode != null and cityCode != ''">
+            and tree_code=#{cityCode}
+        </if>
+        <if test="houseName != null and houseName != ''">
+            and `name` like concat("%",#{houseName},"%")
+        </if>
+        <if test="state != null and state != ''">
+            and `state`=#{state}
+        </if>
+        limit #{sqlPage},#{limit})as t1
+        inner join client_user as t2 on t2.id=t1.user_id
+        inner join client_house_picture as t3 on t1.id=t3.house_id
+        order by id
+    </select>
+
+    <!--房东房源列表-总数-->
+    <select id="landlordHouseListTotal" resultType="java.lang.Integer">
+        select count(id)
+        from client_house
+        where
+        is_del=0 and user_id=#{userId}
+        <if test="cityCode != null and cityCode != ''">
+            and tree_code=#{cityCode}
+        </if>
+        <if test="houseName != null and houseName != ''">
+            and `name` like concat("%",#{houseName},"%")
+        </if>
+        <if test="state != null and state != ''">
+            and `state`=#{state}
+        </if>
+    </select>
+
+    <!--房源表-单个信息-->
+    <select id="clientHouseInfo" resultMap="clientHouseInfoResultMap">
+        select
+            t1.id,
+            t3.img_url,
+            t1.`name`,
+            t1.location,
+            t1.residence_type,
+            t1.parlor_number,
+            t1.bathroom_number,
+            t1.kitchen_number,
+            t1.people_number,
+            t1.bed_number,
+            t1.house_type,
+            t1.`describe`,
+            t5.match_id,
+            t6.residence_id,
+            st_x(t1.point) as pointLng,
+            st_y(t1.point) as pointLat,
+            t1.house_price,
+            t1.discount,
+            DATE_FORMAT(t1.start_date,'%Y-%m-%d') as start_date,
+            DATE_FORMAT(t1.end_date,'%Y-%m-%d') as end_date,
+            t2.id as userId,
+            t2.`name` as userName,
+            t2.phone,
+            t2.head_img,
+            t4.`name` as cityName,
+            t4.tree_code,
+            t1.rental_type,
+            t1.is_near_subway,
+            t1.score,
+            t2.score as userScore
+        from (select * from client_house where id=#{houseId}) as t1
+            inner join client_user as t2 on t2.id=t1.user_id
+            inner join client_house_picture as t3 on t1.id=t3.house_id
+            inner join sys_area as t4 on t4.tree_code=t1.tree_code
+            left join client_house_match as t5 on t5.house_id=t1.id
+            left join client_house_residence as t6 on t6.house_id=t1.id
+    </select>
+    <resultMap id="clientHouseInfoResultMap" type="com.api.sys.responseEntity.ResponseHouseInfoEntity">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="location" property="location"></result>
+        <result column="residence_type" property="residenceType"></result>
+        <result column="parlor_number" property="parlorNumber"></result>
+        <result column="bathroom_number" property="bathroomNumber"></result>
+        <result column="kitchen_number" property="kitchenNumber"></result>
+        <result column="people_number" property="peopleNumber"></result>
+        <result column="bed_number" property="bedNumber"></result>
+        <result column="house_type" property="houseType"></result>
+        <result column="describe" property="describe"></result>
+        <result column="pointLng" property="pointLng"></result>
+        <result column="pointLat" property="pointLat"></result>
+        <result column="house_price" property="housePrice"></result>
+        <result column="discount" property="discount"></result>
+        <result column="start_date" property="startDate"></result>
+        <result column="end_date" property="endDate"></result>
+        <result column="userId" property="userId"></result>
+        <result column="userName" property="userName"></result>
+        <result column="phone" property="phone"></result>
+        <result column="head_img" property="headImg"></result>
+        <result column="cityName" property="cityName"></result>
+        <result column="tree_code" property="treeCode"></result>
+        <result column="rental_type" property="rentalType"></result>
+        <result column="is_near_subway" property="isNearSubway"></result>
+        <result column="score" property="score"></result>
+        <result column="userScore" property="userScore"></result>
+        <collection property="images"  ofType="string" javaType="arrayList">
+            <result column="img_url"></result>
+        </collection>
+        <collection property="matchList"  ofType="string" javaType="arrayList">
+            <result column="match_id"></result>
+        </collection>
+        <collection property="residenceList"  ofType="string" javaType="arrayList">
+            <result column="residence_id"></result>
+        </collection>
+    </resultMap>
+
+    <!--新增房源-->
+    <insert id="addHouse" parameterType="com.api.sys.requestEntity.RequestHouseUpdateEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into client_house
+            ( user_id, `name`, location,tree_code, point, house_price, discount, residence_type, start_date,end_date,
+            rental_type, parlor_number, bathroom_number, kitchen_number,house_type, `describe`, is_near_subway )
+        values
+            (#{userId},#{name},#{location},#{treeCode},ST_GeomFromText(#{point,jdbcType=OTHER}),#{housePrice},#{discount},#{residenceType},#{startDate},#{endDate},
+            #{rentalType},#{parlorNumber},#{bathroomNumber},#{kitchenNumber},#{houseType},#{describe},#{isNearSubway})
+    </insert>
+
+    <!--修改房源-->
+    <update id="updateHouse">
+        update
+            client_house
+        set
+            `state`=0,
+            user_id=#{userId},
+            `name`=#{name},
+            location=#{location},
+            tree_code=#{treeCode},
+            point=ST_GeomFromText(#{point,jdbcType=OTHER}),
+            house_price=#{housePrice},
+            discount=#{discount},
+            rental_type=#{residenceType},
+            start_date=#{startDate},
+            end_date=#{endDate},
+            rental_type=#{rentalType},
+            parlor_number=#{parlorNumber},
+            bathroom_number=#{bathroomNumber},
+            kitchen_number=#{kitchenNumber},
+            house_type=#{houseType},
+            `describe`=#{describe},
+            is_near_subway=#{isNearSubway}
+        where id=#{id}
+    </update>
+
+    <!--查询房源详细-->
+    <select id="getHouseById" resultType="com.api.sys.entity.ClientHouseEntity">
+        SELECT id,user_id,`name`,location,tree_code,point,house_price,discount,residence_type,start_date,
+               end_date,rental_type,people_number,bed_number,house_type,parlor_number,bathroom_number,kitchen_number,
+               `describe`,is_near_subway,`state`,reason,score,comments_number,create_time,update_time,is_del FROM client_house WHERE id=#{houseId}
+    </select>
+</mapper>

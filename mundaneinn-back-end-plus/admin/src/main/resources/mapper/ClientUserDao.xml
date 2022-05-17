@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.admin.sys.dao.ClientUserDao">
+
+    <!--用户管理-列表-->
+    <select id="userList" resultType="com.admin.sys.responseEntity.ResponseClientUserListEntity">
+        select
+        cu.id as userId,
+        cu.`status`,
+        cu.account,
+        cu.nick_name,
+        cu.phone,
+        cu.`name`,
+        cu.sex,
+        cu.score,
+        cu.email,
+        cu.balance
+        from client_user as cu
+        where cu.is_del = 0
+        <if test="account!= null and account != ''">
+            and (cu.account like concat('%',#{account},'%'))
+        </if>
+        <if test="phone != null and phone != ''">
+            and (cu.phone like concat('%',#{phone},'%'))
+        </if>
+        <if test="limit != -1">
+            limit #{sqlPage},#{limit}
+        </if>
+    </select>
+    <!--    用户管理-列表 总数-->
+    <select id="userListTotal" resultType="java.lang.Integer">
+        select
+        count(*)
+        from client_user as cu
+        where cu.is_del = 0
+        <if test="account != null and account != ''">
+            and (cu.account like concat('%',#{account},'%'))
+        </if>
+        <if test="phone != null and phone != ''">
+            and (cu.phone like concat('%',#{phone},'%'))
+        </if>
+    </select>
+
+    <!--用户管理-单个信息-->
+    <select id="userInfo" resultType="com.admin.sys.responseEntity.ResponseClientUserInfoEntity">
+        select
+            cu.account,
+            cu.nick_name,
+            cu.phone,
+            cu.`name`,
+            cu.sex,
+            cu.email
+        from client_user as cu
+        where cu.is_del = 0 and cu.id=#{userId}
+    </select>
+</mapper>

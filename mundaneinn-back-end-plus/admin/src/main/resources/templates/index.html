@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>红尘客栈后台管理系统</title>
+    <link th:href="@{/static/favicon.ico}" rel="shortcut icon">
+    <link th:href="@{/static/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/animate.css}" rel="stylesheet">
+    <link th:href="@{/static/css/plugins/style.css}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span><img alt="image" th:src="@{/static/images/logo.png}"
+                                   style="width: 130px;height: 100px; overflow:hidden;"
+                                   id="headimgurl"
+                                   class="img-responsive"/></span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear">
+                                <span id="user" class="block m-t-xs">
+                                <strong class="font-bold" th:text="${account}" id="account"></strong>
+                                    <b class="caret"></b>
+                                </span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a class="J_menuItem" id="updatePassword" th:attr="type=${type}">修改密码</a></li>
+                            <li class="divider"></li>
+                            <li><a href="logout">安全退出</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">红尘客栈后台管理系统</div>
+                </li>
+                <li th:each="menu : ${menus}">
+                    <a class="J_menuItem" th:href="${menu.url}">
+                        <i th:class="${menu.icon}"></i>
+                        <span class="nav-label" th:text="${menu.name}">一级菜单</span>
+                        <span th:if="${menu.type != 1}" class="fa arrow"></span>
+                    </a>
+                    <ul th:if="${not #lists.isEmpty(menu.list)}" class="nav nav-second-level collapse">
+                        <li th:each="cmenu : ${menu.list}">
+                            <a class="J_menuItem" th:href="${cmenu.url}">
+                                <i class="fa fa-bar-chart-o" th:class="${cmenu.icon}" th:text="${cmenu.name}">二级菜单</i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft">
+                <a class="navbar-minimalize minimalize-styl-3" style="color:#00a65a;" href="#"><i
+                        class="fa fa-bars"></i></a>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active J_menuTab" data-id="main.html">首页</a>
+                </div>
+            </nav>
+            <!--<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>-->
+            <!--</button>-->
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                    </li>
+                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                    </li>
+                </ul>
+            </div>
+            <a href="logout" class="roll-nav roll-right J_tabExit"><i
+                    class="fa fa fa-sign-out"></i> 退出</a>
+        </div>
+        <!--(type=${type})-->
+        <div class="row J_mainContent" id="content-main" style="height: calc(100% - 110px);">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%"
+                    th:src="@{/main.html}"
+                    frameborder="0"
+                    data-id="main.html" seamless></iframe>
+        </div>
+        <div class="footer">
+            <div class="pull-left">
+                <a href="http://www.37www.com" target="_blank"> 成都科技有限公司 </a>
+                技术支持
+            </div>
+        </div>
+    </div>
+</div>
+<!--右侧边栏结束-->
+<!--全局js -->
+<script th:src="@{/static/plugins/jquery/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/static/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/plugins/jquery-metisMenu/jquery.metisMenu.js}"></script>
+<script th:src="@{/static/plugins/jquery-slimScroll/jquery.slimscroll.min.js}"></script>
+<script th:src="@{/static/plugins/layer/layer.js}"></script>
+<script th:src="@{/static/js/plugins/hplus.js}"></script>
+<script th:src="@{/static/js/plugins/contabs.js}"></script>
+<script th:src="@{/static/plugins/pace/pace.min.js}"></script>
+<script th:src="@{/static/js/plugins/common.js}"></script>
+</body>
+<script>
+    //修改密码
+    $("#updatePassword").on("click", function () {
+        /*    $('a', window.parent.document).each(function () {
+                var href = $(this).attr('href');
+                if (href == "sys/user/updatepassword.html" && href != null && href != "" && href != "#" && href != "undefined") {
+                    parent.$(this, parent.document).trigger('click');
+                }
+            });*/
+        $.modal.open("重置密码", "sys/user/updatepassword.html?userId=", "确定", "关闭", false, 800);
+    });
+</script>
+</html>
+
+
