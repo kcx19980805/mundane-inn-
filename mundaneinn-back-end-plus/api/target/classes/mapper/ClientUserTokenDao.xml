@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserTokenDao">
+
+    <!--删除用户token-->
+    <delete id="deleteUserToken">
+        delete from client_user_token where user_id in
+        <foreach collection="list" item="RequestUserTokenUpdateEntity" open="(" separator="," close=")">
+            #{RequestUserTokenUpdateEntity.userId}
+        </foreach>
+    </delete>
+
+    <!--新增用户token-->
+    <delete id="SaveUserToken">
+        insert into client_user_token (user_id,token) values
+        <foreach collection="list" item="RequestUserTokenUpdateEntity" separator=",">
+            (#{RequestUserTokenUpdateEntity.userId},#{RequestUserTokenUpdateEntity.token})
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserDao">
+
+    <!--用户管理-单个信息-->
+    <select id="userInfo" resultType="com.api.sys.responseEntity.ResponseClientUserInfoEntity">
+        select * from client_user as cu where cu.is_del = 0 and cu.id=#{userId}
+    </select>
+
+</mapper>

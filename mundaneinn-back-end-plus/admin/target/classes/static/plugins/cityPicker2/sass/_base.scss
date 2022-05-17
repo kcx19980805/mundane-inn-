@@ -1,0 +1,56 @@
+@charset "utf-8";
+@import "compass/reset";
+@import "compass/css3";
+
+a{
+	text-decoration: none;
+}
+
+.clearfix,
+%clearfix {
+    *zoom: 1;
+    &:after {
+        content: " ";
+        display: table;
+        height: 0;
+        clear: both;
+    }
+}
+
+.github {
+    background: url(../images/github.png) no-repeat;
+    background-size: contain;
+    display: block;
+    font-size: 0;
+    width: 100px;
+    height: 60px;
+    position: fixed;
+    top: 5%;
+    right: 6%;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    @include animation(icons .5s ease-out infinite alternate);
+}
+
+
+@-webkit-keyframes icons {
+    0% {
+        -webkit-transform: rotate(2deg) scale(1);
+        transform: rotate(2deg) scale(1);
+    }
+    to {
+        -webkit-transform: rotate(-2deg) scale(1.1);
+        transform: rotate(-2deg) scale(1.1);
+    }
+}
+
+@keyframes icons {
+    0% {
+        -webkit-transform: rotate(2deg) scale(1);
+        transform: rotate(2deg) scale(1);
+    }
+    to {
+        -webkit-transform: rotate(-2deg) scale(1.1);
+        transform: rotate(-2deg) scale(1.1);
+    }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.SysPermissionGroupDao">
+    <!--权限组-列表-->
+    <select id="SysPermissionGroupList" resultType="com.api.sys.entity.SysPermissionGroupEntity">
+        select * from `sys_permission_group` limit #{sqlPage},#{limit}
+    </select>
+    <!--权限组-列表-总数-->
+    <select id="SysPermissionGroupListTotal" resultType="java.lang.Integer">
+      select count(*) from `sys_permission_group`
+    </select>
+</mapper>

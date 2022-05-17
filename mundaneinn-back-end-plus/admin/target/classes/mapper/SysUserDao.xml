@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.admin.sys.dao.SysUserDao">
+
+    <!--  账号管理列表-->
+    <select id="userList" resultType="com.admin.sys.responseEntity.ResponseUserListEntity">
+        select
+        su.id as userId,
+        su.account,
+        su.status,
+        t1.name as permissionGroupName
+        from `sys_user` as su
+        inner join (
+        select `name`,id
+        from sys_permission_group
+        where is_del = 0
+        ) as t1 on t1.id = su.`type`
+        where su.is_del = 0
+        <if test="keyword != null and keyword != ''">
+            and ( su.`account` like concat ('%',#{keyword},'%'))
+        </if>
+        <if test="limit != -1">
+            limit #{sqlPage},#{limit}
+        </if>
+
+    </select>
+
+    <!--    账号管理-列表-查询-总数-->
+    <select id="userListTotal" resultType="java.lang.Integer">
+        select
+        count(1)
+        from `sys_user` as su
+        inner join (
+        select id
+        from sys_permission_group
+        where is_del = 0
+        ) as t1 on t1.id = su.`type`
+        where su.is_del = 0
+        <if test="keyword != null and keyword != ''">
+            and ( su.`account` like concat ('%',#{keyword},'%'))
+        </if>
+    </select>
+
+    <!--    校验 账号是否重复 区分大小写-->
+    <select id="checkAccountUnique" resultType="java.lang.Integer">
+        select
+        count(1)
+        from `sys_user`
+        where is_del = 0
+        and binary `account` = #{account}
+        <if test="userId != null and userId != ''">
+            and `id` = #{userId}
+        </if>
+    </select>
+
+    <!--   账号管理-查询信息-->
+    <select id="userInfo" resultType="com.admin.sys.responseEntity.ResponseUserInfoEntity">
+        select
+            su.account,
+            t1.id as permissionGroupId,
+            t1.name as permissionGroupName
+        from `sys_user` as su
+                 inner join (
+            select `name`,id
+            from sys_permission_group
+            where is_del = 0
+        ) as t1 on t1.id = su.type
+        where su.is_del = 0
+          and su.id = #{userId}
+    </select>
+
+    <!--    平台登录 区分大小写-->
+    <select id="login" resultType="com.admin.sys.entity.SysUserEntity">
+        select *
+        from sys_user
+        where is_del = 0
+          and binary `account` = #{account}
+            limit 1
+    </select>
+</mapper>

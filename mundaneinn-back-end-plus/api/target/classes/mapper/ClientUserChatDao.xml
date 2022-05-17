@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientUserChatDao">
+    <!--查询2个用户之间的聊天记录-->
+    <select id="clientUserChatList" resultType="com.api.sys.entity.ClientUserChatEntity">
+        select * from client_user_chat
+        where (send_user_id = #{currentUserId} and accept_user_id = #{otherUserId} and is_del_send=0)
+        or (send_user_id = #{otherUserId} and accept_user_id = #{currentUserId} and is_del_accept=0)
+    </select>
+
+    <!--用户聊天记录未读总数-->
+    <select id="unReadTotal" resultType="java.lang.Integer">
+      select count(*) from client_user_chat where is_read=0 and is_del_accept=0 and accept_user_id = #{currentUserId}
+    </select>
+
+    <!--查询与当前用户存在聊天记录的所有用户id,union去重合并-->
+    <select id="getOtherUserId" resultType="java.lang.String">
+        select distinct accept_user_id as userId from client_user_chat where (send_user_id=#{currentUerId} and is_del_send=0)
+        union
+        select distinct send_user_id as userId from client_user_chat where  (accept_user_id=#{currentUerId} and is_del_accept=0)
+    </select>
+
+    <!--查询2个用户之间的最后一条消息-->
+    <select id="lastMessage" resultType="com.api.sys.responseEntity.ResponseUserChatListEntity">
+        select t1.*,t2.id as userId,t2.name as userName,t2.phone,t2.head_img,t2.is_online from
+        (select * from client_user_chat
+         where (send_user_id = #{currentUerId} and accept_user_id = #{otherUserId} and is_del_send=0)
+         or (send_user_id = #{otherUserId} and accept_user_id = #{currentUerId} and is_del_accept=0)
+         order by create_time desc limit 1) as t1
+        inner join client_user as t2 on 1=1 where t2.id=#{otherUserId}
+    </select>
+
+    <!--删除当前用户发送的聊天记录-->
+    <update id="deleteSendChat">
+        update client_user_chat set is_del_send=1 where send_user_id=#{currentUserId} and accept_user_id = #{otherUserId}
+    </update>
+
+    <!--删除当前用户接收的聊天记录-->
+    <update id="deleteAcceptChat">
+        update client_user_chat set is_del_accept=1 where accept_user_id=#{currentUserId} and send_user_id = #{otherUserId}
+    </update>
+</mapper>

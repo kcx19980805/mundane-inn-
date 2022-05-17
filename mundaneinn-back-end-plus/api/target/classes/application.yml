@@ -1,0 +1,84 @@
+spring:
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 3072MB #单个文件上传大小
+      max-request-size: 3072MB #连续上传文件大小
+      enabled: true
+  mvc:
+    #static-path-pattern: /static/** #加上这个swagger无法访问
+
+#Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /
+
+#mybatis-plus:
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.api.sys.entity;com.api.sys.requestEntity
+  global-config:
+    #数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_NULL
+      #驼峰下划线转换
+      column-underline: true
+      #逻辑删除的值
+      logic-delete-value: 1
+      #逻辑不删除的值
+      logic-not-delete-value: 0
+    banner: false
+    #原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+#集群配置
+sys:
+  cluster: false  #集群配置  true集群环境   false单机环境，还需打开pom.xml里的spring-session-data-redis注释
+  globalSessionTimeout: 3600   #单机环境，session过期时间为60分钟
+  redis:
+    open: false  #是否开启redis缓存  true开启   false关闭
+
+#  微信配置
+wx:
+  # 公众号 app_id
+  appid: wxf83968451be676c9
+  # 公众号 secret
+  secret: 94c0acfd77612ceaf2be4caa12c479aa
+  #  商户号mch_id
+  mch_id:
+  # key为商户平台设置的密钥key
+  key:
+  #  支付成功回调地址notify_url
+  notify_url:
+  # 授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
+  redirect_uri:
+  #用户扫码进入小程序授权
+  userRedirectUrl:
+
+#日志级别
+logging:
+  level:
+    com.api: debug
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: token
+  # 令牌密钥
+  secret: abc11defghijklws23mnopqrs13=-=2asasa,rd343stuvwxyz9874563210AAASDDGstvwerfgasasweryq7wersdfwer34
+  # 令牌有效期（时间戳 默认30天）
+  expireTime: 2592000000

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.sys.dao.ClientTypeMatchDao">
+    <!--房源配套类型表-列表-->
+    <select id="clientTypeMatchList" resultType="com.api.sys.entity.ClientTypeMatchEntity">
+        select * from `client_type_match` where is_del=0
+    </select>
+
+</mapper>

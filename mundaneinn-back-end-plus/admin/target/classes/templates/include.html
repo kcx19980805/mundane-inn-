@@ -1,0 +1,145 @@
+<!-- 通用CSS -->
+<head th:fragment=header(title) xmlns:th="http://www.w3.org/1999/xhtml">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title th:text="${title}"></title>
+    <link th:href="@{/static/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/static/css/plugins/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{/static/css/plugins/style.css}" rel="stylesheet"/>
+    <link th:href="@{/static/css/plugins/custom-ui.css}" rel="stylesheet"/>
+    <!-- bootstrap-table 表格插件样式 -->
+    <link th:href="@{/static/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet"/>
+</head>
+
+<!-- 通用JS -->
+<div th:fragment="footer" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/jquery/jquery-3.4.1.js}"></script>
+    <script th:src="@{/static/plugins/jquery/jquery.base64.js}"></script>
+    <script th:src="@{/static/plugins/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- bootstrap-table 表格插件 -->
+    <script th:src="@{/static/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+    <script th:src="@{/static/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+    <script th:src="@{/static/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js}"></script>
+    <!-- 遮罩层 -->
+    <script th:src="@{/static/plugins/blockUI/jquery.blockUI.js}"></script>
+    <script th:src="@{/static/plugins/layer/layer.js}"></script>
+    <!--layDate 日期与时间组件-->
+    <script th:src="@{/static/plugins/laydate/laydate.js}"></script>
+    <!--iCheck-->
+    <script th:src="@{/static/plugins/iCheck/icheck.min.js}"></script>
+    <!--自定义公共js-->
+    <script th:src="@{/static/js/plugins/common.js}"></script>
+    <script th:src="@{/static/js/plugins/custom-table.js}"></script>
+</div>
+
+<!-- ztree树插件 -->
+<div th:fragment="ztree-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/jquery-ztree.3.5/css/zTreeStyle/zTreeStyle.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="ztree-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/jquery-ztree.3.5/js/jquery.ztree.all.js}"></script>
+</div>
+
+<!-- select2下拉框插件 -->
+<div th:fragment="select2-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/select2/select2.min.css}" rel="stylesheet"/>
+    <link th:href="@{/static/plugins/select2/select2-bootstrap.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="select2-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/select2/select2.min.js}"></script>
+</div>
+
+<!-- bootstrap-select下拉框插件 -->
+<div th:fragment="bootstrap-select-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/bootstrap-select/bootstrap-select.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="bootstrap-select-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/bootstrap-select/bootstrap-select.js}"></script>
+</div>
+
+<!-- summernote富文本编辑器插件 -->
+<div th:fragment="summernote-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/summernote/summernote.css}" rel="stylesheet"/>
+    <link th:href="@{/static/plugins/summernote/summernote-bs3.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="summernote-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/summernote/summernote.js}"></script>
+    <script th:src="@{/static/plugins/summernote/summernote-zh-CN.js}"></script>
+</div>
+
+<!-- fileinput文件上传插件 -->
+<div th:fragment="bootstrap-fileinput-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/js/libs/bootstrap-fileinput/fileinput.min.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="bootstrap-fileinput-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/js/libs/bootstrap-fileinput/fileinput.min.js}"></script>
+</div>
+
+<!-- jquery.steps表单向导插件 -->
+<div th:fragment="jquery-steps-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/jquery-steps/jquery.steps.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="jquery-steps-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/jquery-steps/jquery.steps.min.js}"></script>
+</div>
+
+<!-- ECharts百度统计图表插件 -->
+<div th:fragment="echarts-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/Echarts-4.6.0/echarts.min.js}"></script>
+</div>
+
+<!--distpicker省市区 三级联动插件-->
+<div th:fragment="distpicker-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/distpicker/distpicker.js}"></script>
+</div>
+
+<!--citypicker省市区镇 四级联动插件-->
+<div th:fragment="citypicker-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/citypicker/js/city-picker.data.js}"></script>
+    <script th:src="@{/static/plugins/citypicker/js/city-picker.js}"></script>
+</div>
+<div th:fragment="citypicker-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/citypicker/css/city-picker.css}" rel="stylesheet"/>
+</div>
+
+<!--citypicker2省市区镇 四级联动插件-->
+<div th:fragment="citypicker2-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/cityPicker2/js/cityPicker-2.0.4.js}"></script>
+    <script th:src="@{/static/plugins/cityPicker2/js/citydata.min.js}"></script>
+</div>
+<div th:fragment="citypicker2-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/cityPicker2/css/index.css}" rel="stylesheet"/>
+</div>
+
+
+<!--jsTree树-->
+<div th:fragment="jsTree-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/jsTree/themes/default/style.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="jsTree-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/jsTree/jstree.js}"></script>
+</div>
+
+<!--layui-->
+<div th:fragment="layui-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/layui/css/layui.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="layui-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/layui/layui.js}"></script>
+</div>
+
+<!--jQMeter进度条插件-->
+<div th:fragment="jQMeter-css" xmlns:th="http://www.w3.org/1999/xhtml">
+    <link th:href="@{/static/plugins/jQMeter/jqmeter.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="jQMeter-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/jQMeter/jqmeter.min.js}"></script>
+</div>
+
+<!--数字金额转汉字大写-->
+<div th:fragment="chinanumtoenglishnum-js" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script th:src="@{/static/plugins/chinanumtoenglishnum/chinanumtoenglishnum.js}"></script>
+</div>
+
+

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+
+	<!--变量配置-->
+	<!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
+	<property name="LOG_PATTERN" value="%d{yyy-MM-dd HH:mm:ss.SSS} [%-5level] [%-15thread] [%logger{40}] : %msg%n" />
+	<property name="FILE_PATH" value="admin/logs"/>
+
+	<!--控制台输出-->
+	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+		<!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>-->
+		<encoder>
+			<!--<Pattern>${LOG_PATTERN}</Pattern>-->
+			<pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger) - %cyan(%msg%n)</pattern>
+		</encoder>
+	</appender>
+
+	<!--打印所有信息-->
+	<appender name="ALL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ALL</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${FILE_PATH}/all-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>200</maxHistory>
+			<totalSizeCap>80GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--打印info及以下级别的信息-->
+	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${FILE_PATH}/info-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>200</maxHistory>
+			<totalSizeCap>80GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--打印warn及以下级别的信息-->
+	<appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${FILE_PATH}/warn-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>200</maxHistory>
+			<totalSizeCap>80GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--打印error及以下级别的信息-->
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>/opt/gh-admin/logs/error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>200</maxHistory>
+			<totalSizeCap>80GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.asteriskjava.manager" level="ERROR"/>
+
+	<root level="INFO">
+		<appender-ref ref="Console" />
+		<appender-ref ref="ALL_FILE" />
+		<appender-ref ref="INFO_FILE" />
+		<appender-ref ref="WARN_FILE" />
+ 		<appender-ref ref="ERROR_FILE" />
+	</root>
+
+</configuration>
